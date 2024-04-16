@@ -1,0 +1,14 @@
+doctype html
+html(lang="en")
+    head
+        meta(charset="UTF-8")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        link(rel="stylesheet", href="/style.css")
+        script(src="/upload.js" defer) 
+        title Airtable Gallery
+    body
+        .container
+            h1 Wrzuć zdjęcie
+            input(class="url" type="text", name="image", placeholder="Adres URL zdjęcia")
+            input(class="name" type="text", name="name", placeholder="Nazwa zdjęcia")
+            input(class="button", type="button", value="Zatwierdź")

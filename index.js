@@ -36,7 +36,15 @@ base('first').select({
 
 //Routes
 app.get('/', async (req, res) => {
-    res.render('index', {images: downloadedImages});
+    res.render('index');
+})
+
+app.get('/galery', async (req, res) => {
+    res.render('galery', {images: downloadedImages});
+})
+
+app.get('/upload', async (req, res) => {
+    res.render('upload');
 })
 
 //Start server
