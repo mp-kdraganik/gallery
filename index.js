@@ -1,6 +1,8 @@
 import express from 'express';
 import Airtable from 'airtable';
 import dotenv from 'dotenv';
+import path from 'path';
+import bodyParser from 'body-parser';
 
 //Create express app
 const app = express();
@@ -9,6 +11,7 @@ const app = express();
 dotenv.config();
 app.set('view engine', 'pug');
 app.use(express.static('public'));
+app.use(bodyParser.json());
 
 //Fetch API
 
@@ -40,6 +43,24 @@ app.get('/galery', async (req, res) => {
 
 app.get('/upload', async (req, res) => {
     res.render('upload');
+})
+
+app.post('/upload', async (req, res) => {
+    const name = req.body.name;
+    const url = req.body.url;
+    console.log(name, url);
+    let table = base.table("Images");
+    table.create({
+        Name: name,
+        Image: [{url: url}]
+    }, (err, record) => {
+        if(err){
+            console.error(err);
+            return;
+        }
+        console.log(record.getId());
+    });
+    res.redirect('/upload');
 })
 
 //Start server
