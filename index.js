@@ -14,25 +14,18 @@ app.use(express.static('public'));
 
 const base = new Airtable({apiKey: process.env.AIRTABLE_TOKEN}).base(process.env.AIRTABLE_BASE);
 
-const downloadedImages = [];
-
-base('first').select({
-    maxRecords: 30,
-    view: "Grid view"
-}).eachPage(function page(records, fetchNextPage) {
-    records.forEach(function (record) {
-        const newImageObj = {
-            name: record.get('Name'),
-            url: record.get('Image')[0].url
-        };
-        downloadedImages.push(newImageObj);
-    });
-    fetchNextPage();
-}, function done(err) {
-    if (err) {
-        console.error(err);
+async function updateImages(){
+    let downloadedImages = [];
+    let table = base.table("Images");
+    let query = await table.select().all();
+    for(let record of query){
+        const url = record.fields.Image[0].url
+        const name = record.fields.Name;
+        console.log(url, name);
+        downloadedImages.push({url, name});
     }
-});
+    return downloadedImages;
+}
 
 //Routes
 app.get('/', async (req, res) => {
@@ -40,6 +33,8 @@ app.get('/', async (req, res) => {
 })
 
 app.get('/galery', async (req, res) => {
+    let downloadedImages = await updateImages();
+    console.log(downloadedImages);
     res.render('galery', {images: downloadedImages});
 })
 
